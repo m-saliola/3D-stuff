@@ -1,0 +1,2 @@
+shader=assets/shaders/color.shader
+<vec4>u_Color=255,0,0,1
