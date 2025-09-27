@@ -12,6 +12,7 @@
 #include "shader.h"
 #include "material.h"
 #include "texture.h"
+#include "camera.h"
 #include "renderer.h"
 
 #include "vendor/imgui/imgui.h"
@@ -84,6 +85,8 @@ int main() {
     IndexBuffer ib(indices, 36);
     ib.Bind();
 
+    Camera cam(glm::vec3(0, 0, 5));
+
     glm::mat4 proj = glm::perspective(glm::radians(45.0f), 1.0f, 0.01f, 10000.0f); // glm::ortho(0.0f, 960.0f, 0.0f, 960.0f, -1.0f, 1.0f);
     glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, -5.0f));
 
@@ -106,6 +109,7 @@ int main() {
 
     glm::vec3 translation(0, 0, 0);
     glm::vec3 rotation = glm::normalize(glm::vec3(1.0f, 2.0f, 1.0f));
+    glm::vec3 position = cam.GetPosition();
     
     float r = 0;
     float increment = 0.01f;
@@ -119,14 +123,17 @@ int main() {
 
         {
             glm::mat4 model = glm::rotate(glm::translate(glm::mat4(1.0f), translation), glm::radians((float)glfwGetTime() * 20.0f), rotation);
-            glm::mat4 mvp = proj * view * model;
+            // glm::mat4 mvp = proj * view * model;
+            cam.SetPosition(position);
+            glm::mat4 mvp = cam.GetProjectionMatrix() * cam.GetViewMatrix() * model;
             color.GetShader().SetUniform<1, glm::mat4>("u_MVP", mvp);
 
             renderer.Draw(va, ib, color.GetShader());
         }
 
         {
-            ImGui::SliderFloat3("Translation", &translation.x, -5.0f, 5.0f);
+            ImGui::SliderFloat3("Translation", &translation.x, -3.0f, 3.0f);
+            ImGui::SliderFloat3("Position", &position.x, -5.0f, 5.0f);
             ImGui::Text("FPS: %d (%.3fms)", (int)ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
         }
 

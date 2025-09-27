@@ -31,5 +31,7 @@ public:
     void Bind() const;
     void Unbind() const;
 
+    void SetUniforms() const;
+
     inline const Shader& GetShader() const { return m_Shader; }
 };

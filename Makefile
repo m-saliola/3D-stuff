@@ -8,6 +8,7 @@ all:
 	src/shader.cpp \
 	src/material.cpp \
 	src/texture.cpp \
+	src/camera.cpp \
 	src/glad.c \
 	src/vendor/stb_image/stb_image.cpp \
 	src/vendor/imgui/imgui_demo.cpp \

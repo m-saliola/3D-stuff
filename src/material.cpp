@@ -2,11 +2,18 @@
 
 Material::Material(const std::string& filepath) : m_Shader(ParseMaterialShader(filepath)), m_Params(ParseMaterial(filepath)) { 
     Bind();
+    SetUniforms();
 }
 
 void Material::Bind() const { 
     m_Shader.Bind();
+}
 
+void Material::Unbind() const { 
+    m_Shader.Unbind();
+}
+
+void Material::SetUniforms() const {
     for (const auto& param : m_Params) {
         std::visit([&](auto&& value) {
             using T = std::decay_t<decltype(value)>;
@@ -32,10 +39,6 @@ void Material::Bind() const {
             }
         }, param.value);
     }
-}
-
-void Material::Unbind() const { 
-    m_Shader.Unbind();
 }
 
 std::vector<MaterialParameter> Material::ParseMaterial(const std::string& filepath) {
