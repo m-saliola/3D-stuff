@@ -10,3 +10,11 @@ Camera::Camera(const glm::vec3& pos,
     UpdateVectors();
     UpdateView();
 }
+
+void Camera::Translate(glm::vec3 translation) {
+    SetPosition(glm::vec3(m_Pos + translation));
+}
+
+void Camera::Rotate(glm::vec3 rotation) {
+    SetRotation(glm::vec3(m_Rot + rotation));
+}

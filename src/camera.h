@@ -59,4 +59,7 @@ public:
 
         UpdateVectors();
     }
+
+    void Translate(glm::vec3 translation);
+    void Rotate(glm::vec3 rotation);
 };

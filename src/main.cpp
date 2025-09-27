@@ -21,6 +21,31 @@
 #include "vendor/glm/glm.hpp"
 #include "vendor/glm/gtc/matrix_transform.hpp"
 
+Camera cam(glm::vec3(0, 0, 5), glm::vec3(-90.0f, 0.0f, 0.0f));
+
+void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
+    static bool firstMouse = true;
+    static double lastX = 0.0f, lastY = 0.0f;
+
+    if (firstMouse) {
+        lastX = xpos;
+        lastY = ypos;
+        firstMouse = false;
+    }
+
+    float xoffset = xpos - lastX;
+    float yoffset = lastY - ypos;
+
+    lastX = xpos;
+    lastY = ypos;
+
+    float sensitivity = 0.1f;
+    xoffset *= sensitivity;
+    yoffset *= sensitivity;
+
+    cam.Rotate(glm::vec3(xoffset, yoffset, 0.0f));
+}
+
 int main() {
     glfwInit();
 
@@ -33,6 +58,9 @@ int main() {
     glfwMakeContextCurrent(window);
 
     glfwSwapInterval(1);
+
+    glfwSetCursorPosCallback(window, mouse_callback);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 
@@ -85,7 +113,7 @@ int main() {
     IndexBuffer ib(indices, 36);
     ib.Bind();
 
-    Camera cam(glm::vec3(0, 0, 5));
+    cam;
 
     glm::mat4 proj = glm::perspective(glm::radians(45.0f), 1.0f, 0.01f, 10000.0f); // glm::ortho(0.0f, 960.0f, 0.0f, 960.0f, -1.0f, 1.0f);
     glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, -5.0f));
@@ -125,8 +153,8 @@ int main() {
 
         {
             glm::mat4 model = glm::rotate(glm::translate(glm::mat4(1.0f), translation), glm::radians((float)glfwGetTime() * 20.0f), rotation);
-            cam.SetPosition(campos);
-            cam.SetRotation(camrot);
+            // cam.SetPosition(campos);
+            // cam.SetRotation(camrot);
             glm::mat4 mvp = cam.GetProjectionMatrix() * cam.GetViewMatrix() * model;
             color.GetShader().SetUniform<1, glm::mat4>("u_MVP", mvp);
 
@@ -149,6 +177,32 @@ int main() {
         r += increment;
 
         glfwPollEvents();
+
+        glm::vec3 moveVector(0.0f);
+
+        glm::vec3 forward = cam.GetForward();
+        forward.y = 0.0f;
+        if (glm::length(forward) > 0.0f)
+            forward = glm::normalize(forward);
+
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+            moveVector += forward;
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+            moveVector -= cam.GetRight();
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+            moveVector -= forward;
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+            moveVector += cam.GetRight();
+
+        if (glm::length(moveVector) > 0.0f) {
+            moveVector = glm::normalize(moveVector) * 0.025f;
+            cam.Translate(moveVector);
+        }
+
+        cam.Translate(moveVector);
+
+        if (cam.GetRotation().y > 89.9f) cam.SetRotation(glm::vec3(cam.GetRotation().x, 89.9f, cam.GetRotation().z));
+        else if (cam.GetRotation().y < -89.9f) cam.SetRotation(glm::vec3(cam.GetRotation().x, -89.9f, cam.GetRotation().z));
     }
 
     ImGui_ImplGlfwGL3_Shutdown();
