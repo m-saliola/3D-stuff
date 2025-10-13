@@ -1,4 +1,4 @@
-# REQUIRES:
+# REQUIREMENTS:
 #   pip install trimesh
 #   pip install scipy
 

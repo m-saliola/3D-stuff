@@ -12,7 +12,7 @@ void Batcher::UpdateBuffers() const {
     m_Ib.SetData(m_Indices.data(), m_Indices.size());
 }
 
-Batcher::Batcher() : m_Va(), m_Vb(nullptr, 0), m_Ib(nullptr, 0) {  // This is probably not very good (the nullptr stuff)
+Batcher::Batcher() : m_Va(), m_Vb(nullptr, 0), m_Ib(nullptr, 0) {
     VertexBufferLayout layout;
     layout.Push<float>(3);
     layout.Push<float>(3);

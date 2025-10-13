@@ -29,10 +29,11 @@ TODO LIST:
     - Allow per-model translation using model matrices
     - Optimize batching by only updating buffers if geometry has been modified
     - Optimize rendering by only binding buffers if not bound
+    - Optimize materials by using uniform buffers
     - Improve error handling
 */
 
-Camera cam(glm::vec3(0, 0, 5), glm::vec3(-90.0f, 0.0f, 0.0f));
+Camera cam(glm::vec3(0, 0, 5), glm::vec3(-90.0f, 0.0f, 0.0f), 45.0f, 1.0f, 0.01f, 100.0f);
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
     static bool firstMouse = true;
@@ -73,87 +74,22 @@ int main() {
 
     gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 
-    float positions[] = {
-        -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
-        0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
-        0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-        -0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
-
-        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-        0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
-        0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
-        -0.5f, 0.5f, 0.5f, 0.0f, 1.0f,
-    };
-
-    // std::vector<Vertex> vertices = {
-    //     { glm::vec3(-0.5f, 0.5f, -0.5f), glm::vec2(0.0f, 0.0f) },
-    //     { glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec2(1.0f, 0.0f) },
-    //     { glm::vec3(0.5f, -0.5f, -0.5f), glm::vec2(1.0f, 1.0f) },
-    //     { glm::vec3(0.5f, 0.5f, -0.5f), glm::vec2(0.0f, 1.0f) },
-
-    //     { glm::vec3(-0.5f, -0.5f, 0.5f), glm::vec2(0.0f, 0.0f) },
-    //     { glm::vec3(0.5f, -0.5f, 0.5f), glm::vec2(1.0f, 0.0f) },
-    //     { glm::vec3(0.5f, 0.5f, 0.5f), glm::vec2(1.0f, 1.0f) },
-    //     { glm::vec3(-0.5f, 0.5f, 0.5f), glm::vec2(0.0f, 1.0f) }
-    // };
-
-    unsigned int indices[] = {
-        4, 5, 6,
-        6, 7, 4,
-
-        0, 1, 2,
-        2, 3, 0,
-
-        0, 4, 7,
-        7, 3, 0,
-
-        1, 5, 6,
-        6, 2, 1,
-
-        0, 1, 5,
-        5, 4, 0,
-
-        3, 2, 6,
-        6, 7, 3
-    };
-
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     glEnable(GL_DEPTH_TEST);
 
-    VertexArray va;
-    VertexBuffer vb(positions, sizeof(positions));
-
-    VertexBufferLayout layout;
-    layout.Push<float>(3);
-    layout.Push<float>(2);
-
-    va.AddBuffer(vb, layout);
-
-    IndexBuffer ib(indices, 36);
-    ib.Bind();
-
-    glm::mat4 proj = glm::perspective(glm::radians(45.0f), 1.0f, 0.01f, 10000.0f); // glm::ortho(0.0f, 960.0f, 0.0f, 960.0f, -1.0f, 1.0f);
+    glm::mat4 proj = glm::perspective(glm::radians(45.0f), 1.0f, 0.01f, 10000.0f);
     glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, -5.0f));
 
-    // Shader s("assets/shaders/basic.shader");
-    // s.Bind();
-
-    // Texture t("assets/textures/circle.png");
-    // t.Bind(0);
-
-    // s.SetUniform<1, int>("u_Texture", 0);
-    
     Material color("assets/materials/color.material");
     color.Bind();
     
+    Renderer renderer;
     Batcher batcher;
 
-    Model sphere(batcher, "assets/models/sphere.model");
+    Model sphere(batcher, "assets/models/cube.model");
     batcher.AddModel(sphere);
-
-    Renderer renderer;
 
     ImGui::CreateContext();
     ImGui_ImplGlfwGL3_Init(window, true);
@@ -177,24 +113,10 @@ int main() {
 
         {
             glm::mat4 model = glm::rotate(glm::translate(glm::mat4(1.0f), translation), glm::radians((float)glfwGetTime() * 20.0f), rotation);
-            // model = glm::mat4(1);
-            // cam.SetPosition(campos);
-            // cam.SetRotation(camrot);
-
-            // color.GetShader()->SetUniform<1, glm::mat4>("u_Model", model);
-            // color.GetShader()->SetUniform<1, glm::mat4>("u_View", view);
-            // color.GetShader()->SetUniform<1, glm::mat4>("u_Proj", proj);
-            // color.Bind();
-
-            // renderer.Draw(va, ib, color);
-
-            batcher.Draw(renderer, model, view, proj);
+            batcher.Draw(renderer, model, cam.GetViewMatrix(), cam.GetProjectionMatrix());
         }
 
         {
-            ImGui::SliderFloat3("Translation", &translation.x, -3.0f, 3.0f);
-            ImGui::SliderFloat3("Position", &campos.x, -5.0f, 5.0f);
-            ImGui::SliderFloat3("Rotation", &camrot.x, -180.0f, 180.0f);
             ImGui::Text("FPS: %d (%.3fms)", (int)ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
         }
 

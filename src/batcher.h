@@ -42,7 +42,7 @@ public:
 
     void AddModel(const Model& model);
 
-    unsigned int RegisterMaterial(const Material& material); // Dear futur me, there is a high likelyhood that this singular & (and the one in batcher.h) could cause the entire application to deadlock.
+    unsigned int RegisterMaterial(const Material& material);
 
     void Draw(const Renderer& renderer, const glm::mat4& model, const glm::mat4& view, const glm::mat4& proj) const;
 };
