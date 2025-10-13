@@ -56,6 +56,12 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
     cam.Rotate(glm::vec3(xoffset * sensitivity, yoffset * sensitivity, 0.0f));
 }
 
+void resize_callback(GLFWwindow* window, int width, int height) {
+    glViewport(0, 0, width, height);
+
+    cam = Camera(cam.GetPosition(), cam.GetRotation(), cam.GetFov(), static_cast<float>(width) / static_cast<float>(height), cam.GetNearPlane(), cam.GetFarPlane());
+}
+
 int main() {
     glfwInit();
 
@@ -69,8 +75,10 @@ int main() {
 
     glfwSwapInterval(1);
 
-    glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+    glfwSetCursorPosCallback(window, mouse_callback);
+    glfwSetWindowSizeCallback(window, resize_callback);
 
     gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 
@@ -155,6 +163,18 @@ int main() {
 
         if (cam.GetRotation().y > 85.0f) cam.SetRotation(glm::vec3(cam.GetRotation().x, 89.9f, cam.GetRotation().z));
         else if (cam.GetRotation().y < -85.0f) cam.SetRotation(glm::vec3(cam.GetRotation().x, -89.9f, cam.GetRotation().z));
+
+        static bool escPressed = false;
+        static unsigned int mode = GLFW_CURSOR_DISABLED;
+        if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+            if (!escPressed) {
+                escPressed = true;
+                mode = (mode == GLFW_CURSOR_DISABLED) ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED;
+                glfwSetInputMode(window, GLFW_CURSOR, mode);
+            }
+        } else {
+            escPressed = false;
+        }
     }
 
     ImGui_ImplGlfwGL3_Shutdown();

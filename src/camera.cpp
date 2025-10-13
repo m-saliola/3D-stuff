@@ -6,6 +6,10 @@ Camera::Camera(const glm::vec3& pos,
                float near, float far) 
                   : m_Pos(pos), 
                     m_Rot(rot),
+                    m_Fov(fov),
+                    m_Aspect(aspect),
+                    m_Near(near),
+                    m_Far(far),
                     m_Proj(glm::perspective(glm::radians(fov), aspect, near, far)) {
     UpdateVectors();
     UpdateView();
