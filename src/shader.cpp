@@ -1,5 +1,19 @@
 #include "shader.h"
+
+#include <iostream>
+#include <fstream>
+#include <sstream>
+
 #include "renderer.h"
+
+Shader::Shader(const std::string& filepath) {
+    ShaderProgramSource source = ParseShader(filepath);
+    m_RendererID = CreateShader(source.vertexSource, source.fragmentSource);
+}
+
+Shader::~Shader() {
+    if (m_RendererID) glDeleteProgram(m_RendererID);
+}
 
 int Shader::GetUniformLocation(const std::string &name) const {
     if (m_UniformLocationCache.find(name) != m_UniformLocationCache.end())
@@ -8,15 +22,6 @@ int Shader::GetUniformLocation(const std::string &name) const {
     int location = glGetUniformLocation(m_RendererID, name.c_str());
     m_UniformLocationCache[name] = location;
     return location;
-}
-
-Shader::Shader(const std::string& filepath) {
-    ShaderProgramSource source = ParseShader(filepath);
-    m_RendererID = CreateShader(source.vertexSource, source.fragmentSource);
-}
-
-Shader::~Shader() {
-    glDeleteProgram(m_RendererID);
 }
 
 void Shader::Bind() const {

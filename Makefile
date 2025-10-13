@@ -1,12 +1,14 @@
 all:
 	g++ src/main.cpp \
 	src/renderer.cpp \
+	src/batcher.cpp \
 	src/vertex_buffer.cpp \
 	src/index_buffer.cpp \
 	src/vertex_array.cpp \
 	src/vertex_buffer_layout.cpp \
 	src/shader.cpp \
 	src/material.cpp \
+	src/model.cpp \
 	src/texture.cpp \
 	src/camera.cpp \
 	src/glad.c \

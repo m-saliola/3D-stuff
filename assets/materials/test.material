@@ -1,2 +1,2 @@
 shader assets/shaders/color.shader
-vec4 u_Color 1.0 0.24 0.41 1.0
+vec4 u_Color 0.24 1.0 0.83 1.0

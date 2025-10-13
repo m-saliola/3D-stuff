@@ -5,14 +5,17 @@
 #include <fstream>
 #include <sstream>
 
+#include "vertex.h"
 #include "vertex_array.h"
 #include "vertex_buffer.h"
 #include "vertex_buffer_layout.h"
 #include "index_buffer.h"
 #include "shader.h"
 #include "material.h"
+#include "model.h"
 #include "texture.h"
 #include "camera.h"
+#include "batcher.h"
 #include "renderer.h"
 
 #include "vendor/imgui/imgui.h"
@@ -20,6 +23,14 @@
 
 #include "vendor/glm/glm.hpp"
 #include "vendor/glm/gtc/matrix_transform.hpp"
+
+/* 
+TODO LIST:
+    - Allow per-model translation using model matrices
+    - Optimize batching by only updating buffers if geometry has been modified
+    - Optimize rendering by only binding buffers if not bound
+    - Improve error handling
+*/
 
 Camera cam(glm::vec3(0, 0, 5), glm::vec3(-90.0f, 0.0f, 0.0f));
 
@@ -40,10 +51,8 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
     lastY = ypos;
 
     float sensitivity = 0.1f;
-    xoffset *= sensitivity;
-    yoffset *= sensitivity;
 
-    cam.Rotate(glm::vec3(xoffset, yoffset, 0.0f));
+    cam.Rotate(glm::vec3(xoffset * sensitivity, yoffset * sensitivity, 0.0f));
 }
 
 int main() {
@@ -75,6 +84,18 @@ int main() {
         0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
         -0.5f, 0.5f, 0.5f, 0.0f, 1.0f,
     };
+
+    // std::vector<Vertex> vertices = {
+    //     { glm::vec3(-0.5f, 0.5f, -0.5f), glm::vec2(0.0f, 0.0f) },
+    //     { glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec2(1.0f, 0.0f) },
+    //     { glm::vec3(0.5f, -0.5f, -0.5f), glm::vec2(1.0f, 1.0f) },
+    //     { glm::vec3(0.5f, 0.5f, -0.5f), glm::vec2(0.0f, 1.0f) },
+
+    //     { glm::vec3(-0.5f, -0.5f, 0.5f), glm::vec2(0.0f, 0.0f) },
+    //     { glm::vec3(0.5f, -0.5f, 0.5f), glm::vec2(1.0f, 0.0f) },
+    //     { glm::vec3(0.5f, 0.5f, 0.5f), glm::vec2(1.0f, 1.0f) },
+    //     { glm::vec3(-0.5f, 0.5f, 0.5f), glm::vec2(0.0f, 1.0f) }
+    // };
 
     unsigned int indices[] = {
         4, 5, 6,
@@ -113,8 +134,6 @@ int main() {
     IndexBuffer ib(indices, 36);
     ib.Bind();
 
-    cam;
-
     glm::mat4 proj = glm::perspective(glm::radians(45.0f), 1.0f, 0.01f, 10000.0f); // glm::ortho(0.0f, 960.0f, 0.0f, 960.0f, -1.0f, 1.0f);
     glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, -5.0f));
 
@@ -125,9 +144,14 @@ int main() {
     // t.Bind(0);
 
     // s.SetUniform<1, int>("u_Texture", 0);
-
+    
     Material color("assets/materials/color.material");
     color.Bind();
+    
+    Batcher batcher;
+
+    Model sphere(batcher, "assets/models/sphere.model");
+    batcher.AddModel(sphere);
 
     Renderer renderer;
 
@@ -153,12 +177,18 @@ int main() {
 
         {
             glm::mat4 model = glm::rotate(glm::translate(glm::mat4(1.0f), translation), glm::radians((float)glfwGetTime() * 20.0f), rotation);
+            // model = glm::mat4(1);
             // cam.SetPosition(campos);
             // cam.SetRotation(camrot);
-            glm::mat4 mvp = cam.GetProjectionMatrix() * cam.GetViewMatrix() * model;
-            color.GetShader().SetUniform<1, glm::mat4>("u_MVP", mvp);
 
-            renderer.Draw(va, ib, color.GetShader());
+            // color.GetShader()->SetUniform<1, glm::mat4>("u_Model", model);
+            // color.GetShader()->SetUniform<1, glm::mat4>("u_View", view);
+            // color.GetShader()->SetUniform<1, glm::mat4>("u_Proj", proj);
+            // color.Bind();
+
+            // renderer.Draw(va, ib, color);
+
+            batcher.Draw(renderer, model, view, proj);
         }
 
         {
@@ -201,8 +231,8 @@ int main() {
 
         cam.Translate(moveVector);
 
-        if (cam.GetRotation().y > 89.9f) cam.SetRotation(glm::vec3(cam.GetRotation().x, 89.9f, cam.GetRotation().z));
-        else if (cam.GetRotation().y < -89.9f) cam.SetRotation(glm::vec3(cam.GetRotation().x, -89.9f, cam.GetRotation().z));
+        if (cam.GetRotation().y > 85.0f) cam.SetRotation(glm::vec3(cam.GetRotation().x, 89.9f, cam.GetRotation().z));
+        else if (cam.GetRotation().y < -85.0f) cam.SetRotation(glm::vec3(cam.GetRotation().x, -89.9f, cam.GetRotation().z));
     }
 
     ImGui_ImplGlfwGL3_Shutdown();

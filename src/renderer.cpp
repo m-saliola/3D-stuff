@@ -5,7 +5,31 @@ void Renderer::Draw(const VertexArray& va, const IndexBuffer& ib, const Shader& 
     va.Bind();
     ib.Bind();
 
-    glDrawElements(GL_TRIANGLES, ib.GetCount() * sizeof(unsigned int), GL_UNSIGNED_INT, nullptr);
+    glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, nullptr);
+}
+
+void Renderer::Draw(const VertexArray& va, const IndexBuffer& ib, const Material& material) const {
+    material.Bind();
+    va.Bind();
+    ib.Bind();
+
+    glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, nullptr);
+}
+
+void Renderer::Draw(const VertexArray& va, const IndexBuffer& ib, const Shader& shader, unsigned int indexOffset, unsigned int indexCount) const {
+    shader.Bind();
+    va.Bind();
+    ib.Bind();
+
+    glDrawElementsBaseVertex(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, (void*)(indexOffset * sizeof(unsigned int)), 0);
+}
+
+void Renderer::Draw(const VertexArray& va, const IndexBuffer& ib, const Material& material, unsigned int indexOffset, unsigned int indexCount) const {
+    material.Bind();
+    va.Bind();
+    ib.Bind();
+
+    glDrawElementsBaseVertex(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, (void*)(indexOffset * sizeof(unsigned int)), 0);
 }
 
 void Renderer::Clear() const {

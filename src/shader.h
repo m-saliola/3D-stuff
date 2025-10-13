@@ -2,10 +2,7 @@
 
 #include <glad/glad.h>
 #include <unordered_map>
-// #include <vector>
-#include <iostream>
-#include <fstream>
-#include <sstream>
+#include <string>
 
 #include "vendor/glm/glm.hpp"
 #include "vendor/glm/gtc/type_ptr.hpp"
@@ -14,13 +11,6 @@ struct ShaderProgramSource {
     std::string vertexSource;
     std::string fragmentSource;
 };
-
-// struct Uniform {
-//     std::string name;
-//     unsigned int type;
-//     int size;
-//     int location;
-// };
 
 class Shader {
 private:
@@ -53,6 +43,11 @@ public:
             else if constexpr (N == 2) glUniform2i(location, args...);
             else if constexpr (N == 3) glUniform3i(location, args...);
             else if constexpr (N == 4) glUniform4i(location, args...);
+        } else if constexpr (std::is_same_v<T, unsigned int>) {
+            if constexpr (N == 1) glUniform1ui(location, args...);
+            else if constexpr (N == 2) glUniform2ui(location, args...);
+            else if constexpr (N == 3) glUniform3ui(location, args...);
+            else if constexpr (N == 4) glUniform4ui(location, args...);
         } else if constexpr (std::is_same_v<T, glm::mat2>) {
             glUniformMatrix2fv(location, 1, GL_FALSE, glm::value_ptr(std::forward<Args>(args)...));
         } else if constexpr (std::is_same_v<T, glm::mat3>) {
@@ -62,23 +57,5 @@ public:
         }
     }
 
-    // std::vector<Uniform> GetUniforms() const {
-    //     int count, bufSize, length, size;
-    //     unsigned int type;
-    //     glGetProgramiv(m_RendererID, GL_ACTIVE_UNIFORMS, &count);
-    //     glGetProgramiv(m_RendererID, GL_ACTIVE_UNIFORM_MAX_LENGTH, &bufSize);
-    //     char* buffer = (char*)malloc(bufSize);
-
-    //     std::vector<Uniform> uniforms;
-
-    //     for (int i = 0; i < count; i++) {
-    //         glGetActiveUniform(m_RendererID, i, bufSize, &length, &size, &type, buffer);
-    //         uniforms.push_back({std::string(buffer), type, size, GetUniformLocation(buffer)});
-    //         std::cout << buffer << ' ' << length << ' ' << size << ' ' << GetUniformLocation(buffer) << std::endl;
-    //     }
-
-    //     free(buffer);
-
-    //     return uniforms;
-    // }
+    Shader& operator=(const Shader&);
 };
