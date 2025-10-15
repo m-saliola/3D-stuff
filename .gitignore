@@ -1,4 +1,5 @@
 *.exe
 *.glb
 .vscode/
+build/
 imgui.ini
