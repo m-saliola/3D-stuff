@@ -81,104 +81,106 @@ int main() {
     glfwSetWindowSizeCallback(window, resize_callback);
 
     gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-
+    
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     glEnable(GL_DEPTH_TEST);
 
-    glm::mat4 proj = glm::perspective(glm::radians(45.0f), 1.0f, 0.01f, 10000.0f);
-    glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, -5.0f));
+    {
+        glm::mat4 proj = glm::perspective(glm::radians(45.0f), 1.0f, 0.01f, 10000.0f);
+        glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, -5.0f));
 
-    Material color("assets/materials/color.material");
-    color.Bind();
-    
-    Renderer renderer;
-    Batcher batcher;
+        Material color("assets/materials/color.material");
+        color.Bind();
+        
+        Renderer renderer;
+        Batcher batcher;
 
-    Model sphere(batcher, "assets/models/cube.model");
-    batcher.AddModel(sphere);
+        Model sphere(batcher, "assets/models/cube.model");
+        batcher.AddModel(sphere);
 
-    ImGui::CreateContext();
-    ImGui_ImplGlfwGL3_Init(window, true);
-    ImGui::StyleColorsDark();
+        ImGui::CreateContext();
+        ImGui_ImplGlfwGL3_Init(window, true);
+        ImGui::StyleColorsDark();
 
-    glm::vec3 translation(0, 0, 0);
-    glm::vec3 rotation = glm::normalize(glm::vec3(1.0f, 2.0f, 1.0f));
+        glm::vec3 translation(0, 0, 0);
+        glm::vec3 rotation = glm::normalize(glm::vec3(1.0f, 2.0f, 1.0f));
 
-    glm::vec3 campos = cam.GetPosition();
-    glm::vec3 camrot = cam.GetRotation();
-    
-    float r = 0;
-    float increment = 0.01f;
-    float f;
+        glm::vec3 campos = cam.GetPosition();
+        glm::vec3 camrot = cam.GetRotation();
+        
+        float r = 0;
+        float increment = 0.01f;
+        float f;
 
-    while (!glfwWindowShouldClose(window)) {
-        renderer.ClearColor(0.45f, 0.55f, 0.6f, 1.0f);
-        renderer.Clear();
+        while (!glfwWindowShouldClose(window)) {
+            renderer.ClearColor(0.45f, 0.55f, 0.6f, 1.0f);
+            renderer.Clear();
 
-        ImGui_ImplGlfwGL3_NewFrame();
+            ImGui_ImplGlfwGL3_NewFrame();
 
-        {
-            glm::mat4 model = glm::rotate(glm::translate(glm::mat4(1.0f), translation), glm::radians((float)glfwGetTime() * 20.0f), rotation);
-            batcher.Draw(renderer, model, cam.GetViewMatrix(), cam.GetProjectionMatrix());
-        }
-
-        {
-            ImGui::Text("FPS: %d (%.3fms)", (int)ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
-        }
-
-        ImGui::Render();
-        ImGui_ImplGlfwGL3_RenderDrawData(ImGui::GetDrawData());
-
-        glfwSwapBuffers(window);
-
-        if (r > 1 || r < 0) increment = -increment;
-        r += increment;
-
-        glfwPollEvents();
-
-        glm::vec3 moveVector(0.0f);
-
-        glm::vec3 forward = cam.GetForward();
-        forward.y = 0.0f;
-        if (glm::length(forward) > 0.0f)
-            forward = glm::normalize(forward);
-
-        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-            moveVector += forward;
-        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-            moveVector -= cam.GetRight();
-        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-            moveVector -= forward;
-        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-            moveVector += cam.GetRight();
-
-        if (glm::length(moveVector) > 0.0f) {
-            moveVector = glm::normalize(moveVector) * 0.025f;
-            cam.Translate(moveVector);
-        }
-
-        cam.Translate(moveVector);
-
-        if (cam.GetRotation().y > 85.0f) cam.SetRotation(glm::vec3(cam.GetRotation().x, 89.9f, cam.GetRotation().z));
-        else if (cam.GetRotation().y < -85.0f) cam.SetRotation(glm::vec3(cam.GetRotation().x, -89.9f, cam.GetRotation().z));
-
-        static bool escPressed = false;
-        static unsigned int mode = GLFW_CURSOR_DISABLED;
-        if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-            if (!escPressed) {
-                escPressed = true;
-                mode = (mode == GLFW_CURSOR_DISABLED) ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED;
-                glfwSetInputMode(window, GLFW_CURSOR, mode);
+            {
+                glm::mat4 model = glm::rotate(glm::translate(glm::mat4(1.0f), translation), glm::radians((float)glfwGetTime() * 20.0f), rotation);
+                batcher.Draw(renderer, model, cam.GetViewMatrix(), cam.GetProjectionMatrix());
             }
-        } else {
-            escPressed = false;
-        }
-    }
 
-    ImGui_ImplGlfwGL3_Shutdown();
-    ImGui::DestroyContext();
+            {
+                ImGui::Text("FPS: %d (%.3fms)", (int)ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
+            }
+
+            ImGui::Render();
+            ImGui_ImplGlfwGL3_RenderDrawData(ImGui::GetDrawData());
+
+            glfwSwapBuffers(window);
+
+            if (r > 1 || r < 0) increment = -increment;
+            r += increment;
+
+            glfwPollEvents();
+
+            glm::vec3 moveVector(0.0f);
+
+            glm::vec3 forward = cam.GetForward();
+            forward.y = 0.0f;
+            if (glm::length(forward) > 0.0f)
+                forward = glm::normalize(forward);
+
+            if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+                moveVector += forward;
+            if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+                moveVector -= cam.GetRight();
+            if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+                moveVector -= forward;
+            if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+                moveVector += cam.GetRight();
+
+            if (glm::length(moveVector) > 0.0f) {
+                moveVector = glm::normalize(moveVector) * 0.025f;
+                cam.Translate(moveVector);
+            }
+
+            cam.Translate(moveVector);
+
+            if (cam.GetRotation().y > 85.0f) cam.SetRotation(glm::vec3(cam.GetRotation().x, 89.9f, cam.GetRotation().z));
+            else if (cam.GetRotation().y < -85.0f) cam.SetRotation(glm::vec3(cam.GetRotation().x, -89.9f, cam.GetRotation().z));
+
+            static bool escPressed = false;
+            static unsigned int mode = GLFW_CURSOR_DISABLED;
+            if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+                if (!escPressed) {
+                    escPressed = true;
+                    mode = (mode == GLFW_CURSOR_DISABLED) ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED;
+                    glfwSetInputMode(window, GLFW_CURSOR, mode);
+                }
+            } else {
+                escPressed = false;
+            }
+        }
+
+        ImGui_ImplGlfwGL3_Shutdown();
+        ImGui::DestroyContext();
+    }
 
     glfwDestroyWindow(window);
     glfwTerminate();
