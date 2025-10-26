@@ -95,13 +95,13 @@ int main() {
         glm::mat4 proj = glm::perspective(glm::radians(45.0f), 1.0f, 0.01f, 10000.0f);
         glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, -5.0f));
 
-        Material color("assets/materials/color.material");
-        color.Bind();
-        
         Renderer renderer;
         Batcher batcher;
 
-        Model sphere(batcher, "assets/models/cube.model");
+        Model cube(batcher, "assets/models/cube.model");
+        batcher.AddModel(cube);
+        
+        Model sphere(batcher, "assets/models/sphere.model");
         batcher.AddModel(sphere);
 
         ImGui::CreateContext();
