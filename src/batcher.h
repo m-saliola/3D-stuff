@@ -6,6 +6,7 @@
 #include "renderer.h"
 #include "vertex.h"
 #include "material.h"
+#include "camera.h"
 
 #include "vendor/glm/glm.hpp"
 
@@ -44,5 +45,5 @@ public:
 
     unsigned int RegisterMaterial(const Material& material);
 
-    void Draw(const Renderer& renderer, const glm::mat4& model, const glm::mat4& view, const glm::mat4& proj) const;
+    void Draw(const Renderer& renderer, const glm::mat4& model, const glm::mat4& view, const glm::mat4& proj, const Camera& cam) const;
 };

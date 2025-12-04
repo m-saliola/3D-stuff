@@ -98,8 +98,8 @@ int main() {
         Renderer renderer;
         Batcher batcher;
 
-        Model cube(batcher, "assets/models/cube.model");
-        batcher.AddModel(cube);
+        // Model cube(batcher, "assets/models/cube.model");
+        // batcher.AddModel(cube);
         
         Model sphere(batcher, "assets/models/sphere.model");
         batcher.AddModel(sphere);
@@ -126,7 +126,7 @@ int main() {
 
             {
                 glm::mat4 model = glm::rotate(glm::translate(glm::mat4(1.0f), translation), glm::radians((float)glfwGetTime() * 20.0f), rotation);
-                batcher.Draw(renderer, model, cam.GetViewMatrix(), cam.GetProjectionMatrix());
+                batcher.Draw(renderer, model, cam.GetViewMatrix(), cam.GetProjectionMatrix(), cam);
             }
 
             {
