@@ -1,9 +1,6 @@
-import bpy, bmesh
-import sys
-
+import bpy
 
 def export_to_custom_format():
-
     obj = bpy.context.object
     assert obj.type == 'MESH'
     
@@ -12,14 +9,9 @@ def export_to_custom_format():
     if obj.mode != 'OBJECT':
         bpy.ops.object.mode_set(mode='OBJECT')
         
-    temp_mod = obj.modifiers.new(name="__temp_triangulate__", type='TRIANGULATE')
+    obj.modifiers.new(name="__temp_triangulate__", type='TRIANGULATE')
     eval_obj = obj.evaluated_get(depsgraph)
-    tri_mesh = eval_obj.to_mesh()
-
-    for poly in tri_mesh.polygons:
-        assert len(poly.vertices) == 3
-
-    mesh = tri_mesh
+    mesh = eval_obj.to_mesh()
 
     extension = 'model'
     filename = obj.name.replace(" ", "_") + '.' + extension
@@ -37,7 +29,6 @@ def export_to_custom_format():
                               f" {' '.join(str(x) for x in [0, 0])}"
                               f"\n")
         
-
         for face in mesh.polygons:
             output_file.write(f"f {' '.join(str(v) for v in face.vertices)}\n")
             
