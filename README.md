@@ -1,8 +1,11 @@
-# macos instructions
+# macos build instructions
 
-To compile:
+First, install `glfw` via homebrew:
 ```bash
 brew install glfw
+```
+To compile:
+```bash
 ./build.sh
 ```
 To run:
