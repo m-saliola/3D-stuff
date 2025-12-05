@@ -1,6 +1,12 @@
 cmake_minimum_required(VERSION 3.10)
 project(main)
 
+if (APPLE)
+    set(CMAKE_CXX_STANDARD 17)
+    set(CMAKE_CXX_STANDARD_REQUIRED ON)
+    set(CMAKE_CXX_EXTENSIONS OFF)
+endif()
+
 file(GLOB SRC_FILES
 "${CMAKE_SOURCE_DIR}/src/*.cpp"
 "${CMAKE_SOURCE_DIR}/src/*.c"
@@ -37,6 +43,7 @@ if (WIN32)
 elseif (APPLE)
     find_package(OpenGL REQUIRED)
     target_link_libraries(${PROJECT_NAME} glfw ${OPENGL_LIBRARIES})
+    find_package(glfw3 REQUIRED)
 else()
     find_package(OpenGL REQUIRED)
     find_package(X11 REQUIRED)
