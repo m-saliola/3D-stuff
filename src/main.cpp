@@ -104,6 +104,9 @@ int main() {
         Model sphere(batcher, "assets/models/sphere.model");
         batcher.AddModel(sphere);
 
+        Model plane(batcher, "assets/models/plane.model");
+        batcher.AddModel(plane);
+
         ImGui::CreateContext();
         ImGui_ImplGlfwGL3_Init(window, true);
         ImGui::StyleColorsDark();
@@ -126,7 +129,8 @@ int main() {
 
             {
                 glm::mat4 model = glm::rotate(glm::translate(glm::mat4(1.0f), translation), glm::radians((float)glfwGetTime() * 20.0f), rotation);
-                batcher.Draw(renderer, model, cam.GetViewMatrix(), cam.GetProjectionMatrix(), cam);
+                model = glm::mat4(1.0f);
+                batcher.Draw(renderer, model, cam, (float)glfwGetTime());
             }
 
             {

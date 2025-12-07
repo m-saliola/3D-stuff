@@ -45,5 +45,5 @@ public:
 
     unsigned int RegisterMaterial(const Material& material);
 
-    void Draw(const Renderer& renderer, const glm::mat4& model, const glm::mat4& view, const glm::mat4& proj, const Camera& cam) const;
+    void Draw(const Renderer& renderer, const glm::mat4& model, const Camera& cam, float time) const;
 };

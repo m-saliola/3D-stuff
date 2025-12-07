@@ -26,7 +26,7 @@ Batcher::Batcher() : m_Va(), m_Vb(nullptr, 0), m_Ib(nullptr, 0) {
     UpdateBuffers();
 }
 
-void Batcher::Draw(const Renderer& renderer, const glm::mat4& model, const glm::mat4& view, const glm::mat4& proj, const Camera& cam) const {
+void Batcher::Draw(const Renderer& renderer, const glm::mat4& model, const Camera& cam, float time) const {
     UpdateBuffers();
 
     for (const Batch& batch : m_Batches) {
@@ -34,9 +34,10 @@ void Batcher::Draw(const Renderer& renderer, const glm::mat4& model, const glm::
 
         sh.Bind();
         sh.SetUniform<1, glm::mat4>("u_Model", model);
-        sh.SetUniform<1, glm::mat4>("u_View", view);
-        sh.SetUniform<1, glm::mat4>("u_Proj", proj);
+        sh.SetUniform<1, glm::mat4>("u_View", cam.GetViewMatrix());
+        sh.SetUniform<1, glm::mat4>("u_Proj", cam.GetProjectionMatrix());
         sh.SetUniform<3, float>("u_ViewPos", cam.GetPosition().x, cam.GetPosition().y, cam.GetPosition().z);
+        sh.SetUniform<1, float>("u_Time", time);
 
         renderer.Draw(m_Va, m_Ib, m_Materials[batch.material], batch.indexOffset, batch.indexCount);
     }
