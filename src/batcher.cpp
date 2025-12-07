@@ -36,7 +36,7 @@ void Batcher::Draw(const Renderer& renderer, const glm::mat4& model, const glm::
         sh.SetUniform<1, glm::mat4>("u_Model", model);
         sh.SetUniform<1, glm::mat4>("u_View", view);
         sh.SetUniform<1, glm::mat4>("u_Proj", proj);
-        sh.SetUniform<1, glm::vec3>("u_ViewPos", cam.GetPosition());
+        sh.SetUniform<3, float>("u_ViewPos", cam.GetPosition().x, cam.GetPosition().y, cam.GetPosition().z);
 
         renderer.Draw(m_Va, m_Ib, m_Materials[batch.material], batch.indexOffset, batch.indexCount);
     }
