@@ -134,7 +134,11 @@ int main() {
             }
 
             {
+                ImGui::Text("Position: %.3f, %.3f, %.3f", cam.GetPosition().x, cam.GetPosition().y, cam.GetPosition().z);
+                ImGui::Text("Rotation: %.3f, %.3f, %.3f", cam.GetRotation().x, cam.GetRotation().y, cam.GetRotation().z);
+                ImGui::NewLine();
                 ImGui::Text("FPS: %d (%.3fms)", (int)ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
+                ImGui::Text("Tri Count: %d", batcher.GetVertices().size());
             }
 
             ImGui::Render();
