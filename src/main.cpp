@@ -33,7 +33,7 @@ TODO LIST:
     - Improve error handling
 */
 
-Camera cam(glm::vec3(0, 0, 5), glm::vec3(-90.0f, 0.0f, 0.0f), 45.0f, 1.0f, 0.01f, 100.0f);
+Camera cam(glm::vec3(0, 0, 5), glm::vec3(0.0f, -90.0f, 0.0f), 45.0f, 1.0f, 0.01f, 100.0f);
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
     static bool firstMouse = true;
@@ -53,7 +53,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
 
     float sensitivity = 0.1f;
 
-    cam.Rotate(glm::vec3(xoffset * sensitivity, yoffset * sensitivity, 0.0f));
+    cam.Rotate(glm::vec3(yoffset * sensitivity, xoffset * sensitivity, 0.0f));
 }
 
 void resize_callback(GLFWwindow* window, int width, int height) {
@@ -121,7 +121,12 @@ int main() {
         float increment = 0.01f;
         float f;
 
+        float lastTime = 0;
+
         while (!glfwWindowShouldClose(window)) {
+            float deltaTime = (float)glfwGetTime() - lastTime;
+            lastTime = (float)glfwGetTime();
+      
             renderer.ClearColor(0.45f, 0.55f, 0.6f, 1.0f);
             renderer.Clear();
 
@@ -138,7 +143,7 @@ int main() {
                 ImGui::Text("Rotation: %.3f, %.3f, %.3f", cam.GetRotation().x, cam.GetRotation().y, cam.GetRotation().z);
                 ImGui::NewLine();
                 ImGui::Text("FPS: %d (%.3fms)", (int)ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
-                ImGui::Text("Tri Count: %d", batcher.GetVertices().size());
+                ImGui::Text("Tri Count: %d", (int)batcher.GetVertices().size());
             }
 
             ImGui::Render();
@@ -169,13 +174,14 @@ int main() {
 
             if (glm::length(moveVector) > 0.0f) {
                 moveVector = glm::normalize(moveVector) * 0.025f;
-                cam.Translate(moveVector);
+                cam.Translate(moveVector * (deltaTime * 200));
             }
 
-            cam.Translate(moveVector);
+            cam.Translate(moveVector * (deltaTime * 200));
 
-            if (cam.GetRotation().y > 85.0f) cam.SetRotation(glm::vec3(cam.GetRotation().x, 89.9f, cam.GetRotation().z));
-            else if (cam.GetRotation().y < -85.0f) cam.SetRotation(glm::vec3(cam.GetRotation().x, -89.9f, cam.GetRotation().z));
+            // FIX THESE
+            if (cam.GetRotation().x > 85.0f) cam.SetRotation(glm::vec3(84.9f, cam.GetRotation().y, cam.GetRotation().z));
+            else if (cam.GetRotation().x < -85.0f) cam.SetRotation(glm::vec3(-84.9f, cam.GetRotation().y, cam.GetRotation().z));
 
             static bool escPressed = false;
             static unsigned int mode = GLFW_CURSOR_DISABLED;

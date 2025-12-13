@@ -19,7 +19,7 @@ private:
     glm::mat4 m_Proj;
 
     void UpdateVectors() {
-        m_Forward = glm::normalize(glm::vec3(cos(glm::radians(m_Rot.x)) * cos(glm::radians(m_Rot.y)), sin(glm::radians(m_Rot.y)), sin(glm::radians(m_Rot.x)) * cos(glm::radians(m_Rot.y))));
+        m_Forward = glm::normalize(glm::vec3(cos(glm::radians(m_Rot.y)) * cos(glm::radians(m_Rot.x)), sin(glm::radians(m_Rot.x)), sin(glm::radians(m_Rot.y)) * cos(glm::radians(m_Rot.x))));
         m_Right = glm::normalize(glm::cross(m_Forward, glm::vec3(0.0f, 1.0f, 0.0f)));
         m_Up = glm::normalize(glm::cross(m_Right, m_Forward));
 
@@ -34,7 +34,7 @@ private:
 
 public:
     Camera(const glm::vec3& position = glm::vec3(0.0f), 
-           const glm::vec3& rot = glm::vec3(-90.0f, 0.0f, 0.0f), 
+           const glm::vec3& rot = glm::vec3(0.0f, -90.0f, 0.0f), 
            float fov = 45.0f, float aspect = 1.0f, 
            float near = 0.01f, float far = 1000.0f);
 
