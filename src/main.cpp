@@ -179,7 +179,6 @@ int main() {
 
             cam.Translate(moveVector * (deltaTime * 200));
 
-            // FIX THESE
             if (cam.GetRotation().x > 85.0f) cam.SetRotation(glm::vec3(84.9f, cam.GetRotation().y, cam.GetRotation().z));
             else if (cam.GetRotation().x < -85.0f) cam.SetRotation(glm::vec3(-84.9f, cam.GetRotation().y, cam.GetRotation().z));
 
