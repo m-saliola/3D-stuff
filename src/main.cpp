@@ -78,7 +78,7 @@ int main() {
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     glfwSetCursorPosCallback(window, mouse_callback);
-    glfwSetWindowSizeCallback(window, resize_callback);
+    glfwSetFramebufferSizeCallback(window, resize_callback);
 
     gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 
