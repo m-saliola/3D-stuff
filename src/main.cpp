@@ -14,6 +14,7 @@
 #include "material.h"
 #include "model.h"
 #include "texture.h"
+#include "ray.h"
 #include "camera.h"
 #include "batcher.h"
 #include "renderer.h"
@@ -106,6 +107,15 @@ int main() {
 
         Model plane(batcher, "assets/models/plane.model");
         batcher.AddModel(plane);
+
+        Ray ray(glm::vec3(0, 0, 0), glm::vec3(1, 0, 0));
+        RaycastData data;
+
+        std::cout << ray.Raycast(glm::vec3(1, 1, 0), glm::vec3(1, -1, 1), glm::vec3(1, -1, -1), data) << ' ' 
+            << data.distance << ' ' 
+            << data.point.x << ',' << data.point.y << ',' << data.point.z << ' '
+            << data.u << ' ' << data.v
+            << std::endl;
 
         ImGui::CreateContext();
         ImGui_ImplGlfwGL3_Init(window, true);
