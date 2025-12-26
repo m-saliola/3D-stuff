@@ -100,13 +100,13 @@ int main() {
         Batcher batcher;
 
         // Model cube(batcher, "assets/models/cube.model");
-        // batcher.AddModel(cube);
+        // batcher.AddModelToBuffers(cube);
         
         Model sphere(batcher, "assets/models/sphere.model");
-        batcher.AddModel(sphere);
+        batcher.AddModelToBuffers(sphere);
 
         Model plane(batcher, "assets/models/plane.model");
-        batcher.AddModel(plane);
+        batcher.AddModelToBuffers(plane);
 
         Ray ray(glm::vec3(0, 0, 0), glm::vec3(1, 0, 0));
         RaycastData data;

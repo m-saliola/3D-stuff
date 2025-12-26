@@ -43,7 +43,7 @@ void Batcher::Draw(const Renderer& renderer, const glm::mat4& model, const Camer
     }
 }
 
-void Batcher::AddModel(const Model& model) {
+void Batcher::AddModelToBuffers(const Model& model) {
     for (const auto& mesh : model.GetMeshes()) {
         unsigned int vertexOffset = m_Vertices.size();
         m_Vertices.insert(m_Vertices.end(), mesh.vertices.begin(), mesh.vertices.end());

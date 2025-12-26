@@ -41,7 +41,7 @@ public:
     inline const std::vector<Vertex>& GetVertices() const { return m_Vertices; }
     inline const std::vector<unsigned int>& GetIndices() const { return m_Indices; }
 
-    void AddModel(const Model& model);
+    void AddModelToBuffers(const Model& model);
 
     unsigned int RegisterMaterial(const Material& material);
 
