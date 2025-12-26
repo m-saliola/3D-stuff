@@ -17,6 +17,7 @@
 #include "ray.h"
 #include "camera.h"
 #include "batcher.h"
+#include "debug_visualizer.h"
 #include "renderer.h"
 
 #include "vendor/imgui/imgui.h"
@@ -88,7 +89,9 @@ int main() {
 
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
-    glFrontFace(GL_CCW);  
+    glFrontFace(GL_CCW);
+
+    glLineWidth(300.0f);
 
     glEnable(GL_DEPTH_TEST);
 
@@ -98,12 +101,13 @@ int main() {
 
         Renderer renderer;
         Batcher batcher;
+        DebugVisualizer debugVisualizer;
 
         // Model cube(batcher, "assets/models/cube.model");
         // batcher.AddModelToBuffers(cube);
-        
-        Model sphere(batcher, "assets/models/sphere.model");
-        batcher.AddModelToBuffers(sphere);
+
+        // Model sphere(batcher, "assets/models/sphere.model");
+        // batcher.AddModelToBuffers(sphere);
 
         Model plane(batcher, "assets/models/plane.model");
         batcher.AddModelToBuffers(plane);
@@ -126,7 +130,7 @@ int main() {
 
         glm::vec3 campos = cam.GetPosition();
         glm::vec3 camrot = cam.GetRotation();
-        
+
         float r = 0;
         float increment = 0.01f;
         float f;
@@ -136,7 +140,7 @@ int main() {
         while (!glfwWindowShouldClose(window)) {
             float deltaTime = (float)glfwGetTime() - lastTime;
             lastTime = (float)glfwGetTime();
-      
+
             renderer.ClearColor(0.45f, 0.55f, 0.6f, 1.0f);
             renderer.Clear();
 
@@ -146,6 +150,10 @@ int main() {
                 glm::mat4 model = glm::rotate(glm::translate(glm::mat4(1.0f), translation), glm::radians((float)glfwGetTime() * 20.0f), rotation);
                 model = glm::mat4(1.0f);
                 batcher.Draw(renderer, model, cam, (float)glfwGetTime());
+
+                debugVisualizer.ClearBuffers();
+                debugVisualizer.AddLineToBuffers(glm::vec3(0, 1, -1), glm::vec3(100, 0, -1), glm::vec3(0, 0, 1));
+                debugVisualizer.Draw(renderer, model, cam, (float)glfwGetTime());
             }
 
             {

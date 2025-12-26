@@ -1,8 +1,9 @@
 #pragma once
 
+#include <glad/glad.h>
+
 #include <vector>
 
-#include "glad/glad.h"
 #include "renderer.h"
 #include "vertex.h"
 #include "material.h"

@@ -39,7 +39,7 @@ void Batcher::Draw(const Renderer& renderer, const glm::mat4& model, const Camer
         sh.SetUniform<3, float>("u_ViewPos", cam.GetPosition().x, cam.GetPosition().y, cam.GetPosition().z);
         sh.SetUniform<1, float>("u_Time", time);
 
-        renderer.Draw(m_Va, m_Ib, m_Materials[batch.material], batch.indexOffset, batch.indexCount);
+        renderer.Draw(GL_TRIANGLES, m_Va, m_Ib, m_Materials[batch.material], batch.indexOffset, batch.indexCount);
     }
 }
 

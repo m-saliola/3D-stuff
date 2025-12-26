@@ -1,35 +1,35 @@
 #include "renderer.h"
 
-void Renderer::Draw(const VertexArray& va, const IndexBuffer& ib, const Shader& shader) const {
+void Renderer::Draw(GLenum mode, const VertexArray& va,const IndexBuffer& ib, const Shader& shader) const {
     shader.Bind();
     va.Bind();
     ib.Bind();
 
-    glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, nullptr);
+    glDrawElements(mode, ib.GetCount(), GL_UNSIGNED_INT, nullptr);
 }
 
-void Renderer::Draw(const VertexArray& va, const IndexBuffer& ib, const Material& material) const {
+void Renderer::Draw(GLenum mode, const VertexArray& va,const IndexBuffer& ib, const Material& material) const {
     material.Bind();
     va.Bind();
     ib.Bind();
 
-    glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, nullptr);
+    glDrawElements(mode, ib.GetCount(), GL_UNSIGNED_INT, nullptr);
 }
 
-void Renderer::Draw(const VertexArray& va, const IndexBuffer& ib, const Shader& shader, unsigned int indexOffset, unsigned int indexCount) const {
+void Renderer::Draw(GLenum mode, const VertexArray& va,const IndexBuffer& ib, const Shader& shader, unsigned int indexOffset, unsigned int indexCount) const {
     shader.Bind();
     va.Bind();
     ib.Bind();
 
-    glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, (void*)(indexOffset * sizeof(unsigned int)));
+    glDrawElements(mode, indexCount, GL_UNSIGNED_INT, (void*)(indexOffset * sizeof(unsigned int)));
 }
 
-void Renderer::Draw(const VertexArray& va, const IndexBuffer& ib, const Material& material, unsigned int indexOffset, unsigned int indexCount) const {
+void Renderer::Draw(GLenum mode, const VertexArray& va,const IndexBuffer& ib, const Material& material, unsigned int indexOffset, unsigned int indexCount) const {
     material.Bind();
     va.Bind();
     ib.Bind();
 
-    glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, (void*)(indexOffset * sizeof(unsigned int)));
+    glDrawElements(mode, indexCount, GL_UNSIGNED_INT, (void*)(indexOffset * sizeof(unsigned int)));
 }
 
 void Renderer::Clear() const {
