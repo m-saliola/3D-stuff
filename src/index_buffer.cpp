@@ -19,6 +19,7 @@ void IndexBuffer::Unbind() const {
 }
 
 void IndexBuffer::SetData(const void* data, unsigned int count) const {
+    m_Count = count;
     Bind();
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(unsigned int), data, GL_DYNAMIC_DRAW);
 }

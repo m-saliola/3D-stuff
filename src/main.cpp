@@ -91,7 +91,7 @@ int main() {
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
 
-    glLineWidth(300.0f);
+    // glLineWidth(300.0f);
 
     glEnable(GL_DEPTH_TEST);
 
@@ -152,7 +152,13 @@ int main() {
                 batcher.Draw(renderer, model, cam, (float)glfwGetTime());
 
                 debugVisualizer.ClearBuffers();
-                debugVisualizer.AddLineToBuffers(glm::vec3(0, 1, -1), glm::vec3(100, 0, -1), glm::vec3(0, 0, 1));
+
+                debugVisualizer.AddLineToBuffers(glm::vec3(0, 0, 0), glm::vec3(1, 0, 0), glm::vec3(0, 0, 1));
+
+                debugVisualizer.AddLineToBuffers(glm::vec3(1, 1, 0), glm::vec3(1, -1, 1), glm::vec3(0, 1, 0));
+                debugVisualizer.AddLineToBuffers(glm::vec3(1, 1, 0), glm::vec3(1, -1, -1), glm::vec3(0, 1, 0));
+                debugVisualizer.AddLineToBuffers(glm::vec3(1, -1, -1), glm::vec3(1, -1, 1), glm::vec3(0, 1, 0));
+
                 debugVisualizer.Draw(renderer, model, cam, (float)glfwGetTime());
             }
 
