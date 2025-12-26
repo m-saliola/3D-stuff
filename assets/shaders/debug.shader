@@ -13,7 +13,7 @@ uniform mat4 u_Proj;
 void main() {
     v_Color = color;
     gl_Position = u_Proj * u_View * u_Model * vec4(position, 1.0);
-};
+}
 
 #shader fragment
 #version 330 core
@@ -24,5 +24,4 @@ layout (location = 0) out vec4 color;
 
 void main() {
     color = vec4(v_Color, 1.0);
-};
-
+}

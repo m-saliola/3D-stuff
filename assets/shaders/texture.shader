@@ -12,7 +12,7 @@ uniform mat4 u_Proj;
 
 void main() {
     gl_Position = u_Proj * u_View * u_Model * vec4(position, 1.0);
-};
+}
 
 #shader fragment
 #version 330 core
@@ -26,4 +26,4 @@ uniform sampler2D u_Texture;
 void main() {
     vec4 texColor = texture(u_Texture, v_TexCoord);
     color = texColor;
-};
+}
