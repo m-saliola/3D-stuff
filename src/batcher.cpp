@@ -7,7 +7,7 @@
 
 void Batcher::UpdateBuffers() const {
     m_Va.Bind();
-    m_Va.Bind();
+    m_Vb.Bind();
     m_Vb.SetData(m_Vertices.data(), m_Vertices.size() * sizeof(Vertex));
     m_Ib.SetData(m_Indices.data(), m_Indices.size());
 }
@@ -27,7 +27,10 @@ Batcher::Batcher() : m_Va(), m_Vb(nullptr, 0), m_Ib(nullptr, 0) {
 }
 
 void Batcher::Draw(const Renderer& renderer, const glm::mat4& model, const Camera& cam, float time) const {
-    UpdateBuffers();
+    if (m_Dirty) {
+        UpdateBuffers();
+        m_Dirty = false;
+    }
 
     for (const Batch& batch : m_Batches) {
         const Shader& sh = *m_Materials[batch.material].GetShader();
@@ -47,7 +50,7 @@ void Batcher::AddModelToBuffers(const Model& model) {
     for (const auto& mesh : model.GetMeshes()) {
         unsigned int vertexOffset = m_Vertices.size();
         m_Vertices.insert(m_Vertices.end(), mesh.vertices.begin(), mesh.vertices.end());
-        
+
         unsigned int indexOffset = m_Indices.size();
         // m_Indices.insert(m_Indices.end(), mesh.indices.begin(), mesh.indices.end());
         for (unsigned int index : mesh.indices) 
@@ -60,15 +63,16 @@ void Batcher::AddModelToBuffers(const Model& model) {
                 found = true;
                 break;
             }
-        
+
         if (!found)
             m_Batches.push_back(Batch{
-                mesh.material, 
-                vertexOffset, 
-                indexOffset, 
+                mesh.material,
+                indexOffset,
                 static_cast<unsigned int>(mesh.indices.size())
             });
     }
+
+    m_Dirty = true;
 }
 
 unsigned int Batcher::RegisterMaterial(const Material& material) {

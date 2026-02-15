@@ -75,7 +75,7 @@ int main() {
 
     glfwMakeContextCurrent(window);
 
-    glfwSwapInterval(1);
+    glfwSwapInterval(0);
 
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
@@ -205,6 +205,9 @@ int main() {
 
             if (cam.GetRotation().x > 85.0f) cam.SetRotation(glm::vec3(84.9f, cam.GetRotation().y, cam.GetRotation().z));
             else if (cam.GetRotation().x < -85.0f) cam.SetRotation(glm::vec3(-84.9f, cam.GetRotation().y, cam.GetRotation().z));
+
+            if (cam.GetRotation().y > 180.0f) cam.SetRotation(glm::vec3(cam.GetRotation().x, cam.GetRotation().y - 360, cam.GetRotation().z));
+            else if (cam.GetRotation().y < -180.0f) cam.SetRotation(glm::vec3(cam.GetRotation().x, cam.GetRotation().y + 360, cam.GetRotation().z));
 
             static bool escPressed = false;
             static unsigned int mode = GLFW_CURSOR_DISABLED;

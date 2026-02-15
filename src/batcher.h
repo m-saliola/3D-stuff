@@ -15,7 +15,6 @@ class Model;
 
 struct Batch {
     unsigned int material;
-    unsigned int vertexOffset;
     unsigned int indexOffset;
     unsigned int indexCount;
 };
@@ -32,6 +31,8 @@ private:
 
     std::vector<Material> m_Materials;
     std::unordered_map<std::string, unsigned int> m_MaterialPaths;
+
+    mutable bool m_Dirty = true;
 
     void UpdateBuffers() const;
 
