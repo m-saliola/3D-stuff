@@ -35,7 +35,7 @@ TODO LIST:
     - Improve error handling
 */
 
-Camera cam(glm::vec3(0, 0, 5), glm::vec3(0.0f, -90.0f, 0.0f), 45.0f, 1.0f, 0.01f, 100.0f);
+Camera cam(glm::vec3(0, 0, 5), glm::vec3(0.0f, -90.0f, 0.0f), 45.0f, 1.0f, 0.01f, 1000.0f);
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
     static bool firstMouse = true;
