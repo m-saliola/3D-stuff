@@ -22,11 +22,11 @@ DebugVisualizer::DebugVisualizer() : m_Va(), m_Vb(nullptr, 0), m_Ib(nullptr, 0),
     UpdateBuffers();
 }
 
-void DebugVisualizer::Draw(const Renderer& renderer, const glm::mat4& model, const Camera& cam, float time) {
+void DebugVisualizer::Draw(const Renderer& renderer, const Camera& cam, float time) {
     UpdateBuffers();
 
     m_Shader.Bind();
-    m_Shader.SetUniform<1, glm::mat4>("u_Model", model);
+    m_Shader.SetUniform<1, glm::mat4>("u_Model", glm::mat4(1));
     m_Shader.SetUniform<1, glm::mat4>("u_View", cam.GetViewMatrix());
     m_Shader.SetUniform<1, glm::mat4>("u_Proj", cam.GetProjectionMatrix());
     m_Shader.SetUniform<3, float>("u_ViewPos", cam.GetPosition().x, cam.GetPosition().y, cam.GetPosition().z);

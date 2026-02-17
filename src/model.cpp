@@ -16,9 +16,11 @@ std::vector<Mesh> Model::LoadModel(const std::string& filepath) {
     }
 
     std::vector<Mesh> meshes;
-    Mesh meshBuffer;
 
-    std::vector<unsigned int> materials;
+    struct MeshInfo { std::vector<Vertex> vertices; std::vector<unsigned int> indices; Material material };
+    MeshInfo meshBuffer;
+
+    std::vector<Material> materials;
 
     std::string line;
     std::string prefix;
@@ -39,10 +41,10 @@ std::vector<Mesh> Model::LoadModel(const std::string& filepath) {
             meshBuffer.indices.push_back(v2);
         } else if (prefix == "o") {
             unsigned int lastMaterial = meshBuffer.material;
-            meshBuffer = Mesh{};
+            meshBuffer = MeshInfo{};
             meshBuffer.material = lastMaterial;
         } else if (prefix == "e") {
-            meshes.push_back(meshBuffer);
+            meshes.push_back(Mesh(meshBuffer.vertices, meshBuffer.indices, meshBuffer.material));
         } else if (prefix == "m") {
             unsigned int id;
             iss >> id;
@@ -50,7 +52,7 @@ std::vector<Mesh> Model::LoadModel(const std::string& filepath) {
         } else if (prefix == "l") {
             std::string path;
             iss >> path;
-            materials.push_back(m_Batcher.RegisterMaterial(Material(path)));
+            materials.push_back(Material(path));
         }
     }
 

@@ -4,8 +4,7 @@ Camera::Camera(const glm::vec3& pos,
                const glm::vec3& rot,
                float fov, float aspect, 
                float near, float far) 
-                  : m_Pos(pos), 
-                    m_Rot(rot),
+                  : m_Transform(Transform{pos, rot, glm::vec3(0.0f)}), 
                     m_Fov(fov),
                     m_Aspect(aspect),
                     m_Near(near),
@@ -16,9 +15,9 @@ Camera::Camera(const glm::vec3& pos,
 }
 
 void Camera::Translate(glm::vec3 translation) {
-    SetPosition(glm::vec3(m_Pos + translation));
+    SetPosition(glm::vec3(m_Transform.position + translation));
 }
 
 void Camera::Rotate(glm::vec3 rotation) {
-    SetRotation(glm::vec3(m_Rot + rotation));
+    SetRotation(glm::vec3(m_Transform.rotation + rotation));
 }

@@ -1,13 +1,19 @@
 #pragma once
 
 #include <vector>
+#include <memory>
 
 #include "vertex.h"
 
 class Material;
 
-struct Mesh {
-    std::vector<Vertex> vertices;
-    std::vector<unsigned int> indices;
-    unsigned int material;
+class Mesh {
+private:
+    VertexArray m_Va;
+    VertexBuffer m_Vb;
+    IndexBuffer m_Ib;
+    std::shared_ptr<Material> m_Material;
+
+public:
+    Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, std::shared_ptr<Material> material);
 };

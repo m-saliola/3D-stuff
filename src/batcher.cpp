@@ -26,7 +26,7 @@ Batcher::Batcher() : m_Va(), m_Vb(nullptr, 0), m_Ib(nullptr, 0) {
     UpdateBuffers();
 }
 
-void Batcher::Draw(const Renderer& renderer, const glm::mat4& model, const Camera& cam, float time) const {
+void Batcher::Draw(const Renderer& renderer, const Camera& cam, float time) const {
     if (m_Dirty) {
         UpdateBuffers();
         m_Dirty = false;
@@ -36,7 +36,7 @@ void Batcher::Draw(const Renderer& renderer, const glm::mat4& model, const Camer
         const Shader& sh = *m_Materials[batch.material].GetShader();
 
         sh.Bind();
-        sh.SetUniform<1, glm::mat4>("u_Model", model);
+        sh.SetUniform<1, glm::mat4>("u_Model", glm::mat4(1));
         sh.SetUniform<1, glm::mat4>("u_View", cam.GetViewMatrix());
         sh.SetUniform<1, glm::mat4>("u_Proj", cam.GetProjectionMatrix());
         sh.SetUniform<3, float>("u_ViewPos", cam.GetPosition().x, cam.GetPosition().y, cam.GetPosition().z);
@@ -58,7 +58,7 @@ void Batcher::AddModelToBuffers(const Model& model) {
 
         bool found = false;
         for (Batch& batch : m_Batches) 
-            if (batch.material == mesh.material) {
+            if (batch.material == mesh.GetMaterial()) {
                 batch.indexCount += mesh.indices.size();
                 found = true;
                 break;

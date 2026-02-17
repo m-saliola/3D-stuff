@@ -10,11 +10,10 @@
 #include "material.h"
 #include "mesh.h"
 
-class Batcher;
+// make dis hold array of mesh which has vao and vbo and ibo and upload but then make a new thing that makes it draw but then replace batcher with like render_queue or something that draws the stuffs from the other new thing
 
 class Model {
 private:
-    Batcher& m_Batcher;
     std::vector<Mesh> m_Meshes;
 
 public:

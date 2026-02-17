@@ -32,7 +32,7 @@ public:
 
     void AddLineToBuffers(glm::vec3 pos1, glm::vec3 pos2, glm::vec3 color);
 
-    void Draw(const Renderer& renderer, const glm::mat4& model, const Camera& cam, float time);
+    void Draw(const Renderer& renderer, const Camera& cam, float time);
 
     void ClearBuffers();
 };

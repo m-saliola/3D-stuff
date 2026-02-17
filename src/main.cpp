@@ -149,7 +149,7 @@ int main() {
             {
                 glm::mat4 model = glm::rotate(glm::translate(glm::mat4(1.0f), translation), glm::radians((float)glfwGetTime() * 20.0f), rotation);
                 model = glm::mat4(1.0f);
-                batcher.Draw(renderer, model, cam, (float)glfwGetTime());
+                batcher.Draw(renderer, cam, (float)glfwGetTime());
 
                 debugVisualizer.ClearBuffers();
 
@@ -159,7 +159,7 @@ int main() {
                 debugVisualizer.AddLineToBuffers(glm::vec3(1, 1, 0), glm::vec3(1, -1, -1), glm::vec3(0, 1, 0));
                 debugVisualizer.AddLineToBuffers(glm::vec3(1, -1, -1), glm::vec3(1, -1, 1), glm::vec3(0, 1, 0));
 
-                debugVisualizer.Draw(renderer, model, cam, (float)glfwGetTime());
+                debugVisualizer.Draw(renderer, cam, (float)glfwGetTime());
             }
 
             {
