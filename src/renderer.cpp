@@ -1,5 +1,7 @@
 #include "renderer.h"
 
+#include "material.h"
+
 void Renderer::Draw(GLenum mode, const VertexArray& va,const IndexBuffer& ib, const Shader& shader) const {
     shader.Bind();
     va.Bind();

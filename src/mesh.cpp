@@ -1,6 +1,6 @@
 #include "mesh.h"
 
-#include "material"
+#include "material.h"
 
 Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, std::shared_ptr<Material> material) : m_Va(), 
         m_Vb(vertices.empty() ? nullptr : vertices.data(), vertices.size() * sizeof(Vertex)),

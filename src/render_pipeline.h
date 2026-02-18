@@ -13,4 +13,4 @@ public:
 
     void AddInstance(Instance instance);
     void AddInstances(const std::vector<Instance>& instances);
-}
+};

@@ -4,10 +4,13 @@ class IndexBuffer {
 private:
     unsigned int m_RendererID;
     mutable unsigned int m_Count;
-    
+
 public:
     IndexBuffer(const unsigned int* data, unsigned int count);
     ~IndexBuffer();
+
+    IndexBuffer(const IndexBuffer&) = delete;
+    IndexBuffer& operator=(const IndexBuffer&) = delete;
 
     void Bind() const;
     void Unbind() const;

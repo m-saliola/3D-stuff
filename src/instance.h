@@ -2,8 +2,11 @@
 
 #include <memory>
 
-#include "model"
-#include "transform"
+#include "model.h"
+#include "transform.h"
+
+class Renderer;
+class Camera;
 
 class Instance {
 private:
@@ -12,6 +15,7 @@ private:
 
 public:
     Instance(std::shared_ptr<Model> model, Transform transform);
+    Instance(std::shared_ptr<Model> model);
 
     inline const std::shared_ptr<Model>& GetModel() const { return m_Model; }
 
@@ -19,4 +23,4 @@ public:
     inline Transform& GetTransform() { return m_Transform; }
 
     void Draw(const Renderer& renderer, const Camera& cam, float time);
-}
+};

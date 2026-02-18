@@ -17,7 +17,7 @@ private:
     std::vector<Mesh> m_Meshes;
 
 public:
-    Model(Batcher& batcher, const std::string& filepath);
+    Model(const std::string& filepath);
 
     std::vector<Mesh> LoadModel(const std::string& filepath);
 

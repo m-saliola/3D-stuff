@@ -16,7 +16,7 @@
 #include "texture.h"
 #include "ray.h"
 #include "camera.h"
-#include "batcher.h"
+#include "instance.h"
 #include "debug_visualizer.h"
 #include "renderer.h"
 
@@ -35,7 +35,7 @@ TODO LIST:
     - Improve error handling
 */
 
-Camera cam(glm::vec3(0, 0, 5), glm::vec3(0.0f, -90.0f, 0.0f), 45.0f, 1.0f, 0.01f, 1000.0f);
+Camera cam(Transform{glm::vec3(0, 0, 5), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f)}, 45.0f, 1.0f, 0.01f, 1000.0f);
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
     static bool firstMouse = true;
@@ -61,7 +61,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
 void resize_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 
-    cam = Camera(cam.GetPosition(), cam.GetRotation(), cam.GetFov(), static_cast<float>(width) / static_cast<float>(height), cam.GetNearPlane(), cam.GetFarPlane());
+    cam = Camera(cam.GetTransform(), cam.GetFov(), static_cast<float>(width) / static_cast<float>(height), cam.GetNearPlane(), cam.GetFarPlane());
 }
 
 int main() {
@@ -100,17 +100,18 @@ int main() {
         glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, -5.0f));
 
         Renderer renderer;
-        Batcher batcher;
+        // Batcher batcher;
         DebugVisualizer debugVisualizer;
 
         // Model cube(batcher, "assets/models/cube.model");
         // batcher.AddModelToBuffers(cube);
 
-        // Model sphere(batcher, "assets/models/sphere.model");
+        Model sphereModel("assets/models/sphere.model");
+        Instance sphere(std::make_shared<Model>(sphereModel));
         // batcher.AddModelToBuffers(sphere);
 
-        Model plane(batcher, "assets/models/plane.model");
-        batcher.AddModelToBuffers(plane);
+        // Model plane(batcher, "assets/models/plane.model");
+        // batcher.AddModelToBuffers(plane);
 
         Ray ray(glm::vec3(0, 0, 0), glm::vec3(1, 0, 0));
         RaycastData data;
@@ -129,7 +130,7 @@ int main() {
         glm::vec3 rotation = glm::normalize(glm::vec3(1.0f, 2.0f, 1.0f));
 
         glm::vec3 campos = cam.GetPosition();
-        glm::vec3 camrot = cam.GetRotation();
+        glm::quat camrot = cam.GetRotation();
 
         float r = 0;
         float increment = 0.01f;
@@ -147,9 +148,12 @@ int main() {
             ImGui_ImplGlfwGL3_NewFrame();
 
             {
-                glm::mat4 model = glm::rotate(glm::translate(glm::mat4(1.0f), translation), glm::radians((float)glfwGetTime() * 20.0f), rotation);
-                model = glm::mat4(1.0f);
-                batcher.Draw(renderer, cam, (float)glfwGetTime());
+                // glm::mat4 model = glm::rotate(glm::translate(glm::mat4(1.0f), translation), glm::radians((float)glfwGetTime() * 20.0f), rotation);
+                // model = glm::mat4(1.0f);
+
+                sphere.Draw(renderer, cam, (float)glfwGetTime());
+
+                // batcher.Draw(renderer, cam, (float)glfwGetTime());
 
                 debugVisualizer.ClearBuffers();
 
@@ -167,7 +171,7 @@ int main() {
                 ImGui::Text("Rotation: %.3f, %.3f, %.3f", cam.GetRotation().x, cam.GetRotation().y, cam.GetRotation().z);
                 ImGui::NewLine();
                 ImGui::Text("FPS: %d (%.3fms)", (int)ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
-                ImGui::Text("Tri Count: %d", (int)batcher.GetVertices().size());
+                // ImGui::Text("Tri Count: %d", (int)batcher.GetVertices().size());
             }
 
             ImGui::Render();

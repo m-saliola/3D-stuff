@@ -7,7 +7,8 @@
 #include "vertex_array.h"
 #include "index_buffer.h"
 #include "shader.h"
-#include "material.h"
+
+class Material;
 
 inline void PrintGLError(const char* location) {
     GLenum e;

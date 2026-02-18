@@ -1,10 +1,9 @@
 #include "camera.h"
 
-Camera::Camera(const glm::vec3& pos, 
-               const glm::vec3& rot,
+Camera::Camera(Transform transform,
                float fov, float aspect, 
                float near, float far) 
-                  : m_Transform(Transform{pos, rot, glm::vec3(0.0f)}), 
+                  : m_Transform(transform), 
                     m_Fov(fov),
                     m_Aspect(aspect),
                     m_Near(near),
@@ -15,9 +14,9 @@ Camera::Camera(const glm::vec3& pos,
 }
 
 void Camera::Translate(glm::vec3 translation) {
-    SetPosition(glm::vec3(m_Transform.position + translation));
+    SetPosition(m_Transform.position + translation);
 }
 
-void Camera::Rotate(glm::vec3 rotation) {
-    SetRotation(glm::vec3(m_Transform.rotation + rotation));
+void Camera::Rotate(glm::quat rotation) {
+    SetRotation(m_Transform.rotation * rotation);
 }

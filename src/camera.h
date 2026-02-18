@@ -35,16 +35,16 @@ private:
     }
 
 public:
-    Camera(const glm::vec3& position = glm::vec3(0.0f),
-           const glm::vec3& rot = glm::vec3(0.0f, -90.0f, 0.0f),
+    Camera(Transform transform,
            float fov = 45.0f, float aspect = 1.0f,
            float near = 0.01f, float far = 1000.0f);
 
     inline glm::mat4 GetViewMatrix() const { return m_View; }
     inline glm::mat4 GetProjectionMatrix() const { return m_Proj; }
 
+    inline Transform GetTransform() const { return m_Transform; }
     inline glm::vec3 GetPosition() const { return m_Transform.position; }
-    inline glm::vec3 GetRotation() const { return m_Transform.rotation; }
+    inline glm::quat GetRotation() const { return m_Transform.rotation; }
 
     inline float GetFov() const { return m_Fov; }
     inline float GetAspect() const { return m_Aspect; }
@@ -65,12 +65,12 @@ public:
         UpdateVectors();
     }
 
-    inline void SetRotation(glm::vec3 rot) {
+    inline void SetRotation(glm::quat rot) {
         m_Transform.rotation = rot;
 
         UpdateVectors();
     }
 
     void Translate(glm::vec3 translation);
-    void Rotate(glm::vec3 rotation);
+    void Rotate(glm::quat rotation);
 };

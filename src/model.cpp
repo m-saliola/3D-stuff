@@ -4,9 +4,7 @@
 #include <fstream>
 #include <sstream>
 
-#include "batcher.h"
-
-Model::Model(Batcher& batcher, const std::string& filepath) : m_Batcher(batcher), m_Meshes(LoadModel(filepath)) { }
+Model::Model(const std::string& filepath) : m_Meshes(LoadModel(filepath)) { }
 
 std::vector<Mesh> Model::LoadModel(const std::string& filepath) {
     std::ifstream in(filepath);
@@ -17,10 +15,10 @@ std::vector<Mesh> Model::LoadModel(const std::string& filepath) {
 
     std::vector<Mesh> meshes;
 
-    struct MeshInfo { std::vector<Vertex> vertices; std::vector<unsigned int> indices; Material material };
+    struct MeshInfo { std::vector<Vertex> vertices; std::vector<unsigned int> indices; std::shared_ptr<Material> material; };
     MeshInfo meshBuffer;
 
-    std::vector<Material> materials;
+    std::vector<std::shared_ptr<Material>> materials;
 
     std::string line;
     std::string prefix;
@@ -40,7 +38,7 @@ std::vector<Mesh> Model::LoadModel(const std::string& filepath) {
             meshBuffer.indices.push_back(v1);
             meshBuffer.indices.push_back(v2);
         } else if (prefix == "o") {
-            unsigned int lastMaterial = meshBuffer.material;
+            std::shared_ptr<Material> lastMaterial = meshBuffer.material;
             meshBuffer = MeshInfo{};
             meshBuffer.material = lastMaterial;
         } else if (prefix == "e") {
@@ -52,7 +50,7 @@ std::vector<Mesh> Model::LoadModel(const std::string& filepath) {
         } else if (prefix == "l") {
             std::string path;
             iss >> path;
-            materials.push_back(Material(path));
+            materials.push_back(std::make_shared<Material>(Material(path)));
         }
     }
 
